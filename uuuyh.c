@@ -1,0 +1,16 @@
+#include <stdio.h>
+
+int main()
+{
+    float radius, area_circle;
+    scanf("%f", &radius);
+
+    while (radius>0)
+    {
+        area_circle = 3.14 * radius * radius;
+        printf("Area of circle : %f\n", area_circle);
+        radius--;
+    }
+    return 0;
+}
+
