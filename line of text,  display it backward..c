@@ -9,7 +9,7 @@ int main()
     {
         count++;
     }
-  //  j=count-1;
+    j=count-1;
     for(i=0,j=count-1; i<count; i++,j--)
     {
         ch2[j]=ch1[i];
