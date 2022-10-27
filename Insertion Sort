@@ -1,0 +1,11 @@
+  for(int i=1; i<columns; i++)
+    {
+        int current=cubes[i];
+        int j=i-1;
+        while(cubes[j]>current && j>=0)
+        {
+            cubes[j+1]=cubes[j];
+            j--;
+        }
+        cubes[j+1]=current;
+    }
