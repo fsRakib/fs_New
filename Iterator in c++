@@ -12,4 +12,3 @@ for (auto num : vec)
     // no dereference operator
     cout << num << " ";
 }
-
