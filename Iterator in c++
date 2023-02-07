@@ -1,0 +1,14 @@
+vector<int> vec{ 0,1,2,3,4 };
+for (auto it = begin(vec); it != end(vec); it++)
+{
+    // Access element using dereference operator
+    cout << *it << " ";
+}
+// The same thing can be accomplished more simply with a range-for loop:
+
+C++
+for (auto num : vec)
+{
+    // no dereference operator
+    cout << num << " ";
+}
