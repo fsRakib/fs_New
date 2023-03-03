@@ -1,0 +1,50 @@
+What does std::remove do?
+
+Here's pseudo code of std::remove. Take few seconds to see what it's doing and then read the explanation.
+
+/////////////////////////////////////////////////
+Iter remove(Iter start, Iter end, T val) {
+    Iter destination = start;
+
+    //loop through entire list
+    while(start != end) { 
+        //skip element(s) to be removed
+        if (*start == val) { 
+            start++; 
+         }
+         else //retain rest of the elements
+             *destination++ = *start++;
+     }
+
+     //return the new end of the list
+     return destination;
+}
+Notice that remove simply moved up the elements in the sequence, overwriting the values that you wanted to remove. So the values you wanted to remove are indeed gone, but then what's the problem? Let say you had vector with values {1, 2, 3, 4, 5}. After you call remove for val = 3, the vector now has {1, 2, 4, 5, 5}. That is, 4 and 5 got moved up so that 3 is gone from the vector but the size of vector hasn't changed. Also, the end of the vector now contains additional left over copy of 5.
+
+What does vector::erase do?
+
+std::erase takes start and end of the range you want to get rid off. It does not take the value you want to remove, only start and end of the range. Here's pseudo code for how it works:
+////////////////////////////////////////////////////////
+erase(Iter first, Iter last)
+{
+    //copy remaining elements from last
+    while (last != end())
+        *first++ = *last++;
+
+   //truncate vector
+   resize(first - begin());
+}
+So the erase operation actually changes the size of container and frees up the memory.
+
+The remove-erase idiom
+
+The combination of std::remove and std::erase allows you to remove matching elements from the container so that container would actually get truncated if elements were removed. Here's how to do it:
+
+//first do the remove
+auto removed = std::remove(vec.begin(), vec.end(), val);
+
+//now truncate the vector
+vec.erase(removed, vec.end());
+This is known as the remove-erase idiom. Why is it designed like this? The insight is that the operation of finding elements is more generic and independent of underlying container (only dependent on iterators). However operation of erase depends on how container is storing memory (for example, you might have linked list instead of dynamic array). So STL expects containers to do its own erase while providing generic "remove" operation so all containers don't have to implement that code. In my view, the name is very misleading and std::remove should have been called std::find_move.
+
+Note: Above code is strictly pseudocode. The actual STL implementation is more smarter, for example, using std::move instead of copy.
