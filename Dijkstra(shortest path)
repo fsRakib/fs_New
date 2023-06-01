@@ -1,0 +1,67 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+typedef pair<int, int>pii;
+const int INF=1e18;
+
+vector<int> DijkSTra( vector<vector<pii>> G, int N)
+{
+    vector<int>dis(N+1, INF);
+    dis[1]=0;
+
+    priority_queue<pii, vector<pii>, greater<pii>>pq;       //pair of distance & vertex
+    pq.push({0, 1});       //
+
+    vector<int>previous(N+1, -1);       //previous vector stores the previous vertex on the shortest path from vertex 1 to each vertex.
+    //==============Dijkstra Main loop========================
+    while(!pq.empty())
+    {
+        int current=pq.top().second;
+        pq.pop();
+
+        for(auto child  : G[current])
+        {
+            int V=child.first;
+             int WT=child.second;
+
+            if( dis[current]+ WT < dis[V] )
+            {
+                dis[V]= dis[current]+WT;
+                previous[V]=current;
+                pq.push({dis[V], V});
+            }
+        }
+    }
+    if(dis[N]==INF)
+        return vector<int>();
+
+    vector<int>PATH;
+    for(int V=N; V!=-1; V=previous[V])      //V= previous[V] updates the value of V by assigning it the previous vertex stored in the previous vector.
+        PATH.push_back(V);
+    reverse(PATH.begin(), PATH.end());
+
+    return PATH;
+}
+
+int32_t main()
+{
+    int n,m;
+    cin>>n>>m;
+    vector<vector<pii>>g(n+1);
+    for(int i=0; i<m; i++)
+    {
+        int u, v, wt;
+        cin>>u>>v>>wt;
+        g[u].push_back({v, wt});
+        g[v].push_back({u, wt});
+    }
+    vector<int> path= DijkSTra(g, n);
+
+    if(path.empty())
+        cout<<-1<<endl;
+    else
+        for(auto val : path)
+        cout<<val<<" ";
+
+    return 0;
+}
