@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+const int inf= 1e17;
+vector<vector<pair<int, int>>>adj;
+vector<int>path;
+vector<int>dis;
+vector<int>track;
+priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>>pq;
+
+void shortestPath(int destination)
+{
+    dis[1]=0;
+    pq.push({0, 1});
+
+    while(pq.empty()==false)
+    {
+        int currCity= pq.top().second;
+        pq.pop();
+
+        for(auto child : adj[currCity])
+        {
+            if(dis[currCity]+child.second<dis[child.first])
+            {
+                dis[child.first]=dis[currCity]+child.second;
+                pq.push({dis[child.first], child.first});
+                track[child.first]= currCity;   //  currCity is the previous node on the shortest path to child.first
+            }
+        }
+    }
+
+    if(dis[destination]==inf)
+    {
+        path.push_back(-1);
+        return;
+    }
+
+    for(int v=destination; v!=-1; v=track[v])
+        path.push_back(v);
+
+    reverse(path.begin(), path.end());
+}
+
+int32_t main()
+{
+    int n,m;
+    cin>>n>>m;
+    adj.resize(n + 1);
+    while(m--)
+    {
+        int u, v, w;
+        cin>>u >>v >>w;
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});
+    }
+    dis.resize(n+1, inf);
+    track.resize(n+1, -1);
+
+    shortestPath(n);
+
+    if(path.empty()|| path[0]==-1)
+        cout<<-1<<endl;
+    else
+    {
+        for(int x: path )
+            cout<<x<<" ";
+        cout<<endl;
+    }
+    return 0;
+}
