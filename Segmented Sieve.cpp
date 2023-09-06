@@ -1,7 +1,7 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-const int N=100000;
+const int N=100000000;
 vector<bool>mark(N+1);  ///By defaul all element are assined as "False"
 
 void sieve()
