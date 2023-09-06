@@ -1,21 +1,17 @@
 #include<bits/stdc++.h>
 using namespace std;
-#define int long long
-const int N=100000;
-vector<bool>mark(N+1);
 
+const int N=100000;
+vector<bool>mark(N+1);  ///By defaul all element are assined as "False"
 
 void sieve()
 {
-    for(int i=2; i<=N; i++)
-        mark[i]=true;
-
     for(int i=2; i*i<=N; i++)
     {
-        if(mark[i]==true)
+        if(mark[i]==false)
         {
             for(int j=i*i; j<=N; j+=i)
-                mark[j]=false;
+                mark[j]=true;
         }
     }
 }
@@ -24,12 +20,12 @@ vector<int>generate_primes(int R)
     vector<int>Prime;
     for(int i=2; i<=R; i++)
     {
-        if(mark[i]==true)
+        if(mark[i]==false)
             Prime.push_back(i);
     }
     return Prime;
 }
-int32_t main()
+int main()
 {
     sieve();
     int t;
@@ -39,27 +35,24 @@ int32_t main()
         int l,r;
         cin>>l>>r;
         vector<int>primes=generate_primes(sqrt(r));
+        vector<bool> segment(r-l+1);    ///By defaul all element are assined as "False"
 
-        int segment[r-l+1];
-        for(int i=0; i<r-l+1; i++)
-            segment[i]=1;
-
-        for(auto pr: primes)
+        for(int i=0; i<primes.size(); i++)
         {
-            int firstMultiple= (l/pr)*pr;
-            if(firstMultiple<l)
-                firstMultiple+=pr;
-            //          int firstMultiple= ceil(l/pr)*pr;
+            int firstMultiple= (l/primes[i]) * primes[i];
 
-            for(int j=max(firstMultiple, pr*pr); j<=r; j+=pr)
-                segment[j-l]=0;
+            if(firstMultiple<l)
+                firstMultiple+=primes[i];
+
+            for(int j=max(firstMultiple, primes[i]*primes[i]); j<=r; j+=primes[i])
+                segment[j-l]=true;
         }
 
         for(int i=l; i<=r; i++)
-            if(segment[i-l]==true &&i!=1)
+            if(segment[i-l]==false &&i!=1)
                 cout<<i<<endl;
-        cout<<endl;
 
+        cout<<endl;
     }
     return 0;
 }
