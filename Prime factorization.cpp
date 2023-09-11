@@ -3,7 +3,7 @@ using namespace std;
 
 void primeFactor(int n)
 {
-    vector<int>spf={0};
+    vector<int>spf(n+1);
     for(int i=2; i<=n; i++)
     {
         spf[i]=i;
