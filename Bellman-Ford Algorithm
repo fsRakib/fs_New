@@ -1,0 +1,53 @@
+#include<bits/stdc++.h>
+using namespace std;
+const int INF=1e5;
+
+int main()
+{
+    int n,m;
+    cin>>n>>m;
+    vector<vector<pair<int,int>>>g(n+1);
+    while(m--)
+    {
+        int u,v,w;
+        cin>>u>>v>>w;
+        g[u].push_back({v, w});
+    }
+    vector<int> dis(n+1, INF);
+    dis[1]=0;
+    /// Bellman-Ford algorithm
+    int N=n-1;
+    while(N--)
+    {
+        for(int u=1; u<=n; u++)
+            for(auto edge: g[u])
+            {
+                int v=edge.first;
+                int w=edge.second;
+
+                if(dis[u]!=INF && dis[u]+w<dis[v])
+                    dis[v]= dis[u]+w;
+            }
+    }
+    ///Check for negative cycles
+    bool neg_cycl=false;
+    for(int u=1; u<=n; u++)
+        for(auto edge: g[u])
+        {
+            int v=edge.first;
+            int w=edge.second;
+
+            if(dis[u]!=INF && dis[u]+w<dis[v])
+            {
+                neg_cycl=true;
+                break;
+            }
+        }
+        if(neg_cycl)
+            cout<<"Negative cycle detected"<<endl;
+        else
+            for(int i=1; i<=n; i++)
+            cout<<dis[i]<<" ";
+
+    return 0;
+}
