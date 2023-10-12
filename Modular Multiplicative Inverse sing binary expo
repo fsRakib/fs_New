@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int long long
+
+int binary_exponentiation(int a, int n, int m)
+{
+    if(n==0)
+        return 1;
+
+    int p=(binary_exponentiation(a, n/2,m))%m;
+
+    if(n&1)
+    {
+        return (((p*p)%m)*(a))%m;
+    }
+    else
+    {
+        return (p*p)%m;
+    }
+}
+
+int32_t main()
+{
+        int n,m;
+        cin>> n >>m;
+        int ans =binary_exponentiation(n, m-2, m);
+        cout<<ans<<endl;
+    return 0;
+}
