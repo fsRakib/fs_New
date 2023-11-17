@@ -1,57 +1,53 @@
 #include<bits/stdc++.h>
 using namespace std;
-
-const int N=100000000;
-vector<bool>mark(N+1);  ///By defaul all element are assined as "False"
-
-void sieve()
+vector<int>sieve(int n)
 {
-    for(int i=2; i*i<=N; i++)
-    {
-        if(mark[i]==false)
-        {
-            for(int j=i*i; j<=N; j+=i)
-                mark[j]=true;
-        }
-    }
+    vector<bool>isPrime(n+1);
+
+    for(int i=2; i*i<=n; i++)
+        if(!isPrime[i])
+            for(int j=2*i; j<=n; j+=i)
+                isPrime[j]=true;
+
+    vector<int>res;
+    for(int i=2; i<=n; i++)
+        if(!isPrime[i])
+            res.push_back(i);
+
+    return res;
 }
-vector<int>generate_primes(int R)
+
+void segmentedSieve(int l, int h)
 {
-    vector<int>Prime;
-    for(int i=2; i<=R; i++)
+    int root_h=sqrt(h);
+    vector<bool> segment(h-l+1);
+    vector<int>primes=sieve(root_h);
+
+    for(int prime: primes)
     {
-        if(mark[i]==false)
-            Prime.push_back(i);
+        int firstMultiple= (l/prime)*prime;
+
+        if(firstMultiple<l)
+            firstMultiple+=prime;
+
+        for(int j=max(firstMultiple, prime*prime); j<=h; j+=prime)
+            segment[j-l]=true;
     }
-    return Prime;
+
+    for(int i=l; i<=h; i++)
+        if(!segment[i-l] && i!=1)
+            cout<<i<<" ";
 }
+
 int main()
 {
-    sieve();
     int t;
     cin>>t;
     while(t--)
     {
-        int l,r;
-        cin>>l>>r;
-        vector<int>primes=generate_primes(sqrt(r));
-        vector<bool> segment(r-l+1);    ///By defaul all element are assined as "False"
-
-        for(int i=0; i<primes.size(); i++)
-        {
-            int firstMultiple= (l/primes[i]) * primes[i];
-
-            if(firstMultiple<l)
-                firstMultiple+=primes[i];
-
-            for(int j=max(firstMultiple, primes[i]*primes[i]); j<=r; j+=primes[i])
-                segment[j-l]=true;
-        }
-
-        for(int i=l; i<=r; i++)
-            if(segment[i-l]==false &&i!=1)
-                cout<<i<<endl;
-
+        int l,h;
+        cin>>l>>h;
+        segmentedSieve(l,h);
         cout<<endl;
     }
     return 0;
