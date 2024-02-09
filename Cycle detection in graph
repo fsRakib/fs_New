@@ -1,0 +1,19 @@
+vector<int> g[N];
+bool vis [N];
+
+///-----cycle detection
+bool dfs(int vertex, int par)
+{
+    vis[vertex]=true;
+    bool isLoopExists=false;
+    for (int child: g[vertex])
+    {
+        if (vis[child] && child==par)
+            continue;
+        if(vis[child])
+            return true;
+
+        isLoopExists |=dfs(child, vertex);
+    }
+    return isLoopExists;
+}
